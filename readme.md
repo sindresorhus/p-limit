@@ -39,7 +39,8 @@ Returns a `limit` function.
 
 #### concurrency
 
-Type: `number`
+Type: `number`<br>
+Minimum: `1`
 
 Concurrency limit.
 
