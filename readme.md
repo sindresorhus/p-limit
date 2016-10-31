@@ -13,7 +13,6 @@ $ npm install --save p-limit
 ## Usage
 
 ```js
-const delay = require('delay');
 const pLimit = require('p-limit');
 
 const limit = pLimit(1);
