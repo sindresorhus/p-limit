@@ -56,6 +56,7 @@ Promise-returning/async function.
 
 ## Related
 
+- [p-queue](https://github.com/sindresorhus/p-queue) - Promise queue with concurrency control
 - [p-throttle](https://github.com/sindresorhus/p-throttle) - Throttle promise-returning & async functions
 - [p-debounce](https://github.com/sindresorhus/p-debounce) - Debounce promise-returning & async functions
 - [p-all](https://github.com/sindresorhus/p-all) - Run promise-returning & async functions concurrently with optional limited concurrency
