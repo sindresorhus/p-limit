@@ -1,7 +1,7 @@
 'use strict';
 module.exports = concurrency => {
-	if (!(Number.isFinite(concurrency) && concurrency >= 1)) {
-		throw new TypeError('Expected `concurrency` to be a finite number from 1 and up');
+	if (concurrency < 1) {
+		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
 	}
 
 	const queue = [];
