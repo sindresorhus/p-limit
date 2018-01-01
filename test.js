@@ -35,3 +35,28 @@ test('concurrency: 4', async t => {
 
 	await Promise.all(input);
 });
+
+test('non-promise returning function', async t => {
+	await t.notThrows(async () => {
+		const limit = m(1);
+		await limit(() => null);
+	});
+});
+
+test('continues after sync throw', async t => {
+	const limit = m(1);
+	let ran = false;
+
+	const promises = [
+		limit(() => {
+			throw new Error('err');
+		}),
+		limit(() => {
+			ran = true;
+		})
+	];
+
+	await Promise.all(promises).catch(() => {});
+
+	t.is(ran, true);
+});

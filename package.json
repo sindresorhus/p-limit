@@ -45,5 +45,8 @@
   },
   "xo": {
     "esnext": true
+  },
+  "dependencies": {
+    "p-try": "^1.0.0"
   }
 }
