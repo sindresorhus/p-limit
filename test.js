@@ -26,7 +26,7 @@ test('concurrency: 4', async t => {
 
 	const limit = m(concurrency);
 
-	const input = Array(100).fill(0).map(() => limit(async () => {
+	const input = Array.from({length: 100}, () => limit(async () => {
 		running++;
 		t.true(running <= concurrency);
 		await delay(randomInt(30, 200));
