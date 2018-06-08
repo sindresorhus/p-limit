@@ -17,26 +17,23 @@ module.exports = concurrency => {
 		}
 	};
 
-	return fn => new Promise((resolve, reject) => {
-		const run = () => {
-			activeCount++;
+	const run = (fn, resolve, ...args) => {
+		activeCount++;
 
-			pTry(fn).then(
-				val => {
-					resolve(val);
-					next();
-				},
-				err => {
-					reject(err);
-					next();
-				}
-			);
-		};
+		const result = pTry(fn, ...args);
 
+		resolve(result);
+
+		result.then(next, next);
+	};
+
+	const enqueue = (fn, resolve, ...args) => {
 		if (activeCount < concurrency) {
-			run();
+			run(fn, resolve, ...args);
 		} else {
-			queue.push(run);
+			queue.push(run.bind(null, fn, resolve, ...args));
 		}
-	});
+	};
+
+	return (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
 };

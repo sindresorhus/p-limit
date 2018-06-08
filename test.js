@@ -60,3 +60,10 @@ test('continues after sync throw', async t => {
 
 	t.is(ran, true);
 });
+
+test('can give additional arguments', async t => {
+	const limit = m(1);
+	const symbol = Symbol('test');
+
+	await limit(a => t.is(a, symbol), symbol);
+});
