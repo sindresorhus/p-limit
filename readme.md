@@ -44,15 +44,21 @@ Minimum: `1`
 
 Concurrency limit.
 
-### limit(fn)
+### limit(fn, ...args)
 
-Returns the promise returned by calling `fn`.
+Returns the promise returned by calling `fn(...args)`.
 
 #### fn
 
 Type: `Function`
 
 Promise-returning/async function.
+
+#### ...args
+
+Any arguments to pass through to `fn`.
+
+Support for passing arguments on to the `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't need this optimization unless you're pushing a *lot* of functions.
 
 
 ## Related
