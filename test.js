@@ -81,8 +81,8 @@ test('test values of activeCount and pendingCount', async t => {
 	t.is(limit.activeCount(), 0);
 	t.is(limit.pendingCount(), 0);
 
-	const immediatePromises = Array.from({ length: 5 }, () => limit(() => delay(1000)));
-	const delayedPromises = Array.from({ length: 3 }, () => limit(() => delay(1000)));
+	const immediatePromises = Array.from({length: 5}, () => limit(() => delay(1000)));
+	const delayedPromises = Array.from({length: 3}, () => limit(() => delay(1000)));
 
 	t.is(limit.activeCount(), 5);
 	t.is(limit.pendingCount(), 3);
