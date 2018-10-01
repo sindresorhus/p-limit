@@ -33,11 +33,11 @@ module.exports = concurrency => {
 		} else {
 			queue.push(run.bind(null, fn, resolve, ...args));
 		}
-  };
-  
-  const generator = (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
-  generator.activeCount = () => activeCount;
-  generator.pendingCount = () => queue.length;
+	};
+
+	const generator = (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
+	generator.activeCount = () => activeCount;
+	generator.pendingCount = () => queue.length;
 
 	return generator;
 };
