@@ -61,6 +61,13 @@ Any arguments to pass through to `fn`.
 Support for passing arguments on to the `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't need this optimization unless you're pushing a *lot* of functions.
 
 
+## FAQ
+
+### How is this different from the [`p-queue`](https://github.com/sindresorhus/p-queue) package?
+
+This package is only about limiting the number of concurrent executions, while `p-queue` is a fully featured queue implementation with lots of different options, introspection, and ability to pause and clear the queue.
+
+
 ## Related
 
 - [p-queue](https://github.com/sindresorhus/p-queue) - Promise queue with concurrency control
