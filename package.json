@@ -34,7 +34,7 @@
 		"await",
 		"promises",
 		"bluebird"
-    ],
+	],
 	"dependencies": {
 		"p-try": "^2.0.0"
 	},
