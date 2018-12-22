@@ -60,13 +60,13 @@ Any arguments to pass through to `fn`.
 
 Support for passing arguments on to the `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't need this optimization unless you're pushing a *lot* of functions.
 
-### limit.activeCount()
+### limit.activeCount
 
-Returns the number of promises that are currently running.
+The number of promises that are currently running.
 
-### limit.pendingCount()
+### limit.pendingCount
 
-Returns the number of promises that are waiting to run (i.e. their internal `fn` was not called yet).
+The number of promises that are waiting to run (i.e. their internal `fn` was not called yet).
 
 ## Related
 

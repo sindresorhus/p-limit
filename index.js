@@ -36,8 +36,14 @@ module.exports = concurrency => {
 	};
 
 	const generator = (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
-	generator.activeCount = () => activeCount;
-	generator.pendingCount = () => queue.length;
+	Object.defineProperties(generator, {
+		activeCount: {
+			get: () => activeCount
+		},
+		pendingCount: {
+			get: () => queue.length
+		}
+	});
 
 	return generator;
 };
