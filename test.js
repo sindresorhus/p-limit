@@ -37,7 +37,7 @@ test('concurrency: 4', async t => {
 });
 
 test('non-promise returning function', async t => {
-	await t.notThrows(async () => {
+	await t.notThrowsAsync(async () => {
 		const limit = m(1);
 		await limit(() => null);
 	});
@@ -66,4 +66,24 @@ test('accepts additional arguments', async t => {
 	const symbol = Symbol('test');
 
 	await limit(a => t.is(a, symbol), symbol);
+});
+
+test('does not ignore errors', async t => {
+	const limit = m(1);
+	const error = new Error('🦄');
+
+	const promises = [
+		limit(async () => {
+			await delay(30);
+		}),
+		limit(async () => {
+			await delay(80);
+			throw error;
+		}),
+		limit(async () => {
+			await delay(50);
+		})
+	];
+
+	await t.throwsAsync(Promise.all(promises), {is: error});
 });
