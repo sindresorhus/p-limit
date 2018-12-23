@@ -88,7 +88,7 @@ test('does not ignore errors', async t => {
 	await t.throwsAsync(Promise.all(promises), {is: error});
 });
 
-test('test values of activeCount and pendingCount', async t => {
+test('activeCount and pendingCount properties', async t => {
 	const limit = m(5);
 	t.is(limit.activeCount, 0);
 	t.is(limit.pendingCount, 0);
