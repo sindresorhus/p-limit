@@ -39,11 +39,11 @@
 		"p-try": "^2.0.0"
 	},
 	"devDependencies": {
-		"ava": "*",
-		"delay": "^3.0.0",
+		"ava": "^1.0.1",
+		"delay": "^4.1.0",
 		"in-range": "^1.0.0",
 		"random-int": "^1.0.0",
 		"time-span": "^2.0.0",
-		"xo": "*"
+		"xo": "^0.23.0"
 	}
 }
