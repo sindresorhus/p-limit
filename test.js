@@ -87,3 +87,32 @@ test('does not ignore errors', async t => {
 
 	await t.throwsAsync(Promise.all(promises), {is: error});
 });
+
+test('activeCount and pendingCount properties', async t => {
+	const limit = m(5);
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 0);
+
+	const runningPromise1 = limit(() => delay(1000));
+	t.is(limit.activeCount, 1);
+	t.is(limit.pendingCount, 0);
+
+	await runningPromise1;
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 0);
+
+	const immediatePromises = Array.from({length: 5}, () => limit(() => delay(1000)));
+	const delayedPromises = Array.from({length: 3}, () => limit(() => delay(1000)));
+
+	t.is(limit.activeCount, 5);
+	t.is(limit.pendingCount, 3);
+
+	await Promise.all(immediatePromises);
+	t.is(limit.activeCount, 3);
+	t.is(limit.pendingCount, 0);
+
+	await Promise.all(delayedPromises);
+
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 0);
+});
