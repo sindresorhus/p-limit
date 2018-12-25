@@ -3,7 +3,7 @@ import delay from 'delay';
 import inRange from 'in-range';
 import timeSpan from 'time-span';
 import randomInt from 'random-int';
-import m from '.';
+import pLimit from '.';
 
 test('concurrency: 1', async t => {
 	const input = [
@@ -13,7 +13,7 @@ test('concurrency: 1', async t => {
 	];
 
 	const end = timeSpan();
-	const limit = m(1);
+	const limit = pLimit(1);
 	const mapper = ([val, ms]) => limit(() => delay(ms).then(() => val));
 
 	t.deepEqual(await Promise.all(input.map(mapper)), [10, 20, 30]);
@@ -24,7 +24,7 @@ test('concurrency: 4', async t => {
 	const concurrency = 5;
 	let running = 0;
 
-	const limit = m(concurrency);
+	const limit = pLimit(concurrency);
 
 	const input = Array.from({length: 100}, () => limit(async () => {
 		running++;
@@ -38,13 +38,13 @@ test('concurrency: 4', async t => {
 
 test('non-promise returning function', async t => {
 	await t.notThrowsAsync(async () => {
-		const limit = m(1);
+		const limit = pLimit(1);
 		await limit(() => null);
 	});
 });
 
 test('continues after sync throw', async t => {
-	const limit = m(1);
+	const limit = pLimit(1);
 	let ran = false;
 
 	const promises = [
@@ -62,14 +62,14 @@ test('continues after sync throw', async t => {
 });
 
 test('accepts additional arguments', async t => {
-	const limit = m(1);
+	const limit = pLimit(1);
 	const symbol = Symbol('test');
 
 	await limit(a => t.is(a, symbol), symbol);
 });
 
 test('does not ignore errors', async t => {
-	const limit = m(1);
+	const limit = pLimit(1);
 	const error = new Error('🦄');
 
 	const promises = [
@@ -89,7 +89,7 @@ test('does not ignore errors', async t => {
 });
 
 test('activeCount and pendingCount properties', async t => {
-	const limit = m(5);
+	const limit = pLimit(5);
 	t.is(limit.activeCount, 0);
 	t.is(limit.pendingCount, 0);
 

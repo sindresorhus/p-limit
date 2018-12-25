@@ -68,6 +68,7 @@ The number of promises that are currently running.
 
 The number of promises that are waiting to run (i.e. their internal `fn` was not called yet).
 
+
 ## FAQ
 
 ### How is this different from the [`p-queue`](https://github.com/sindresorhus/p-queue) package?
