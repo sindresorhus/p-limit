@@ -14,7 +14,11 @@ test('concurrency: 1', async t => {
 
 	const end = timeSpan();
 	const limit = pLimit(1);
-	const mapper = ([val, ms]) => limit(() => delay(ms).then(() => val));
+
+	const mapper = ([value, ms]) => limit(async () => {
+		await delay(ms);
+		return value;
+	});
 
 	t.deepEqual(await Promise.all(input.map(mapper)), [10, 20, 30]);
 	t.true(inRange(end(), 590, 650));
