@@ -40,7 +40,8 @@ Returns a `limit` function.
 #### concurrency
 
 Type: `number`<br>
-Minimum: `1`
+Minimum: `1`<br>
+Default: `Infinity`
 
 Concurrency limit.
 

@@ -120,3 +120,11 @@ test('activeCount and pendingCount properties', async t => {
 	t.is(limit.activeCount, 0);
 	t.is(limit.pendingCount, 0);
 });
+
+test('throws on invalid concurrency argument', async t => {
+	await t.throwsAsync(pLimit(0));
+	await t.throwsAsync(pLimit(-1));
+	await t.throwsAsync(pLimit(1.2));
+	await t.throwsAsync(pLimit(undefined));
+	await t.throwsAsync(pLimit(true));
+});
