@@ -2,13 +2,11 @@
 
 > Run multiple promise-returning & async functions with limited concurrency
 
-
 ## Install
 
 ```
 $ npm install p-limit
 ```
-
 
 ## Usage
 
@@ -30,7 +28,6 @@ const input = [
 })();
 ```
 
-
 ## API
 
 ### pLimit(concurrency)
@@ -39,8 +36,8 @@ Returns a `limit` function.
 
 #### concurrency
 
-Type: `number`<br>
-Minimum: `1`<br>
+Type: `number`\
+Minimum: `1`\
 Default: `Infinity`
 
 Concurrency limit.
@@ -69,13 +66,11 @@ The number of promises that are currently running.
 
 The number of promises that are waiting to run (i.e. their internal `fn` was not called yet).
 
-
 ## FAQ
 
 ### How is this different from the [`p-queue`](https://github.com/sindresorhus/p-queue) package?
 
-This package is only about limiting the number of concurrent executions, while `p-queue` is a fully featured queue implementation with lots of different options, introspection, and ability to pause and clear the queue.
-
+This package is only about limiting the number of concurrent executions, while `p-queue` is a fully featured queue implementation with lots of different options, introspection, and ability to pause the queue.
 
 ## Related
 
@@ -84,7 +79,6 @@ This package is only about limiting the number of concurrent executions, while `
 - [p-debounce](https://github.com/sindresorhus/p-debounce) - Debounce promise-returning & async functions
 - [p-all](https://github.com/sindresorhus/p-all) - Run promise-returning & async functions concurrently with optional limited concurrency
 - [More…](https://github.com/sindresorhus/promise-fun)
-
 
 ---
 
