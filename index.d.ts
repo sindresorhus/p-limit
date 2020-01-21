@@ -18,6 +18,10 @@ export interface Limit {
 	The number of promises that are waiting to run (i.e. their internal `fn` was not called yet).
 	*/
 	readonly pendingCount: number;
+	/**
+	Discards any promises that are still waiting to run.
+	*/
+	clearQueue(): void;
 }
 
 /**

@@ -16,3 +16,5 @@ expectType<Promise<string>>(limit((a: string, b: number) => Promise.resolve(''),
 
 expectType<number>(limit.activeCount);
 expectType<number>(limit.pendingCount);
+
+expectType<void>(limit.clearQueue());
