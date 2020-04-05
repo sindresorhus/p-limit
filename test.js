@@ -121,6 +121,17 @@ test('activeCount and pendingCount properties', async t => {
 	t.is(limit.pendingCount, 0);
 });
 
+test('clearQueue', t => {
+	const limit = pLimit(1);
+
+	Array.from({length: 1}, () => limit(() => delay(1000)));
+	Array.from({length: 3}, () => limit(() => delay(1000)));
+
+	t.is(limit.pendingCount, 3);
+	limit.clearQueue();
+	t.is(limit.pendingCount, 0);
+});
+
 test('throws on invalid concurrency argument', async t => {
 	await t.throwsAsync(pLimit(0));
 	await t.throwsAsync(pLimit(-1));
