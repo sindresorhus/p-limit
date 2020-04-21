@@ -74,6 +74,10 @@ This might be useful if you want to teardown the queue at the end of your progra
 
 Note: This does not cancel promises that are already running.
 
+### limit.wait()
+
+Returns a Promise that will resolve the next time the pending and active counts are zero.  This can be useful during teardown if you would prefer to wait until everything has completed.
+
 ## FAQ
 
 ### How is this different from the [`p-queue`](https://github.com/sindresorhus/p-queue) package?

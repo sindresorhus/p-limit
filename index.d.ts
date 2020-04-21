@@ -27,6 +27,11 @@ export interface Limit {
 	Note: This does not cancel promises that are already running.
 	*/
 	clearQueue(): void;
+
+	/**
+    Returns a Promise that will resolve the next time the pending and active counts are zero.  This can be useful during teardown if you would prefer to wait until everything has completed.
+	*/
+	wait(): Promise<void>;
 }
 
 /**

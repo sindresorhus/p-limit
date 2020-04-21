@@ -7,6 +7,7 @@ const pLimit = concurrency => {
 	}
 
 	const queue = [];
+	const waiters = [];
 	let activeCount = 0;
 
 	const next = () => {
@@ -14,6 +15,10 @@ const pLimit = concurrency => {
 
 		if (queue.length > 0) {
 			queue.shift()();
+		} else if (activeCount === 0) {
+			while (waiters.length > 0) {
+				waiters.shift()();
+			}
 		}
 	};
 
@@ -46,6 +51,15 @@ const pLimit = concurrency => {
 		clearQueue: {
 			value: () => {
 				queue.length = 0;
+			}
+		},
+		wait: {
+			value: () => {
+				if (queue.length === 0 && activeCount === 0) {
+					return Promise.resolve();
+				}
+
+				return new Promise(resolve => waiters.push(resolve));
 			}
 		}
 	});

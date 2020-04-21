@@ -18,3 +18,5 @@ expectType<number>(limit.activeCount);
 expectType<number>(limit.pendingCount);
 
 expectType<void>(limit.clearQueue());
+
+expectType<Promise<void>>(limit.wait());
