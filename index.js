@@ -13,7 +13,7 @@ const pLimit = concurrency => {
 		activeCount--;
 
 		if (queue.length > 0) {
-			queue.shift()();
+			queue.shift().run();
 		}
 	};
 
@@ -27,8 +27,8 @@ const pLimit = concurrency => {
 		result.then(next, next);
 	};
 
-	const enqueue = (fn, resolve, ...args) => {
-		queue.push(run.bind(null, fn, resolve, ...args));
+	const enqueue = (fn, resolve, reject, ...args) => {
+		queue.push({run: run.bind(null, fn, resolve, ...args), reject});
 
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
@@ -38,12 +38,14 @@ const pLimit = concurrency => {
 			await Promise.resolve();
 
 			if (activeCount < concurrency && queue.length > 0) {
-				queue.shift()();
+				queue.shift().run();
 			}
 		})();
 	};
 
-	const generator = (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
+	const generator = (fn, ...args) => new Promise(
+		(resolve, reject) => enqueue(fn, resolve, reject, ...args)
+	);
 	Object.defineProperties(generator, {
 		activeCount: {
 			get: () => activeCount
@@ -53,6 +55,7 @@ const pLimit = concurrency => {
 		},
 		clearQueue: {
 			value: () => {
+				queue.forEach(({reject}) => reject(new Error('queue cleared before function was invoked')));
 				queue.length = 0;
 			}
 		}
