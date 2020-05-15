@@ -28,11 +28,12 @@ const pLimit = concurrency => {
 	};
 
 	const enqueue = (fn, resolve, ...args) => {
-		if (activeCount < concurrency) {
-			run(fn, resolve, ...args);
-		} else {
-			queue.push(run.bind(null, fn, resolve, ...args));
-		}
+		queue.push(run.bind(null, fn, resolve, ...args));
+		Promise.resolve().then(() => {
+			if (activeCount < concurrency && queue.length > 0) {
+				queue.shift()();
+			}
+		});
 	};
 
 	const generator = (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
