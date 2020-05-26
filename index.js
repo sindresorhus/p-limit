@@ -55,7 +55,9 @@ const pLimit = concurrency => {
 		},
 		clearQueue: {
 			value: () => {
-				queue.forEach(({reject}) => reject(new Error('queue cleared before function was invoked')));
+				for (const {reject} of queue) {
+					reject(new Error('Queue cleared before function was invoked'));
+				}
 				queue.length = 0;
 			}
 		}
