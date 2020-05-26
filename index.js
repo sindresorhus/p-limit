@@ -58,6 +58,7 @@ const pLimit = concurrency => {
 				for (const {reject} of queue) {
 					reject(new Error('Queue cleared before function was invoked'));
 				}
+
 				queue.length = 0;
 			}
 		}
