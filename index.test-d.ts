@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import pLimit from '.';
+import pLimit = require('.');
 
 const limit = pLimit(1);
 
