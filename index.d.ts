@@ -26,7 +26,7 @@ export interface Limit {
 
 	Note: This does not cancel promises that are already running.
 	*/
-	clearQueue(): void;
+	clearQueue: () => void;
 }
 
 /**

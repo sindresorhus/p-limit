@@ -20,8 +20,8 @@ test('concurrency: 1', async t => {
 		return value;
 	});
 
-	t.deepEqual(await Promise.all(input.map(mapper)), [10, 20, 30]);
-	t.true(inRange(end(), 590, 650));
+	t.deepEqual(await Promise.all(input.map(x => mapper(x))), [10, 20, 30]);
+	t.true(inRange(end(), {start: 590, end: 650}));
 });
 
 test('concurrency: 4', async t => {

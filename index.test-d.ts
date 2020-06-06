@@ -1,4 +1,4 @@
-import {expectType} from 'tsd-check';
+import {expectType} from 'tsd';
 import pLimit from '.';
 
 const limit = pLimit(1);
@@ -6,7 +6,7 @@ const limit = pLimit(1);
 const input = [
 	limit(() => Promise.resolve('foo')),
 	limit(() => Promise.resolve('bar')),
-	limit(() => Promise.resolve(undefined)),
+	limit(() => Promise.resolve(undefined))
 ];
 
 expectType<Promise<Array<string | undefined>>>(Promise.all(input));

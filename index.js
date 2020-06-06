@@ -17,14 +17,19 @@ const pLimit = concurrency => {
 		}
 	};
 
-	const run = (fn, resolve, ...args) => {
+	const run = async (fn, resolve, ...args) => {
 		activeCount++;
 
+		// TODO: Get rid of `pTry`. It's not needed anymore.
 		const result = pTry(fn, ...args);
 
 		resolve(result);
 
-		result.then(next, next);
+		try {
+			await result;
+		} catch {}
+
+		next();
 	};
 
 	const enqueue = (fn, resolve, ...args) => {
@@ -62,4 +67,3 @@ const pLimit = concurrency => {
 };
 
 module.exports = pLimit;
-module.exports.default = pLimit;

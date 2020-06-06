@@ -8,13 +8,13 @@
 	"author": {
 		"name": "Sindre Sorhus",
 		"email": "sindresorhus@gmail.com",
-		"url": "sindresorhus.com"
+		"url": "https://sindresorhus.com"
 	},
 	"engines": {
-		"node": ">=6"
+		"node": ">=10"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd-check"
+		"test": "xo && ava && tsd"
 	},
 	"files": [
 		"index.js",
@@ -41,12 +41,12 @@
 		"p-try": "^2.0.0"
 	},
 	"devDependencies": {
-		"ava": "^1.2.1",
+		"ava": "^2.4.0",
 		"delay": "^4.1.0",
-		"in-range": "^1.0.0",
-		"random-int": "^1.0.0",
-		"time-span": "^2.0.0",
-		"tsd-check": "^0.3.0",
-		"xo": "^0.24.0"
+		"in-range": "^2.0.0",
+		"random-int": "^2.0.1",
+		"time-span": "^4.0.0",
+		"tsd": "^0.11.0",
+		"xo": "^0.26.0"
 	}
 }
