@@ -27,7 +27,8 @@ const pLimit = concurrency => {
 
 		try {
 			await result;
-		} catch {}
+		// eslint-disable-next-line no-unused-vars
+		} catch (error) {}
 
 		next();
 	};
