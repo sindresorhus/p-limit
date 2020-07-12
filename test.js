@@ -138,10 +138,10 @@ test('clearQueue', async t => {
 	t.is(limit.pendingCount, 0);
 });
 
-test('throws on invalid concurrency argument', async t => {
-	await t.throwsAsync(pLimit(0)(() => t.fail()));
-	await t.throwsAsync(pLimit(-1)(() => t.fail()));
-	await t.throwsAsync(pLimit(1.2)(() => t.fail()));
-	await t.throwsAsync(pLimit(undefined)(() => t.fail()));
-	await t.throwsAsync(pLimit(true)(() => t.fail()));
+test('throws on invalid concurrency argument', t => {
+	t.throws(() => pLimit(0));
+	t.throws(() => pLimit(-1));
+	t.throws(() => pLimit(1.2));
+	t.throws(() => pLimit(undefined));
+	t.throws(() => pLimit(true));
 });
