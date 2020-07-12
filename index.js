@@ -3,7 +3,7 @@ const pTry = require('p-try');
 
 const pLimit = concurrency => {
 	if (!((Number.isInteger(concurrency) || concurrency === Infinity) && concurrency > 0)) {
-		return Promise.reject(new TypeError('Expected `concurrency` to be a number from 1 and up'));
+		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
 	}
 
 	const queue = [];
