@@ -130,11 +130,14 @@ test('clearQueue', async t => {
 	const limit = pLimit(1);
 
 	Array.from({length: 1}, () => limit(() => delay(1000)));
-	Array.from({length: 3}, () => limit(() => delay(1000)));
+	const pendingPromises = Array.from({length: 3},
+		() => t.throwsAsync(limit(() => delay(1000)), 'Queue cleared before function was invoked')
+	);
 
 	await Promise.resolve();
 	t.is(limit.pendingCount, 3);
 	limit.clearQueue();
+	await Promise.all(pendingPromises);
 	t.is(limit.pendingCount, 0);
 });
 
