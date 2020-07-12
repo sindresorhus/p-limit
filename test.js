@@ -139,9 +139,23 @@ test('clearQueue', async t => {
 });
 
 test('throws on invalid concurrency argument', t => {
-	t.throws(() => pLimit(0));
-	t.throws(() => pLimit(-1));
-	t.throws(() => pLimit(1.2));
-	t.throws(() => pLimit(undefined));
-	t.throws(() => pLimit(true));
+	t.throws(() => {
+		pLimit(0);
+	});
+
+	t.throws(() => {
+		pLimit(-1);
+	});
+
+	t.throws(() => {
+		pLimit(1.2);
+	});
+
+	t.throws(() => {
+		pLimit(undefined);
+	});
+
+	t.throws(() => {
+		pLimit(true);
+	});
 });
