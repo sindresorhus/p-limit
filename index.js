@@ -27,9 +27,7 @@ const pLimit = concurrency => {
 
 		try {
 			await result;
-		} catch (ignoreErr) {
-			// console.error("errors");
-		}
+		} catch (error) { console.error(error); }
 
 		next();
 	};
