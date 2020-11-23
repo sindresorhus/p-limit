@@ -1,12 +1,13 @@
 'use strict';
 const pTry = require('p-try');
+const yallist = require('yallist');
 
 const pLimit = concurrency => {
 	if (!((Number.isInteger(concurrency) || concurrency === Infinity) && concurrency > 0)) {
 		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
 	}
 
-	const queue = [];
+	const queue = yallist.create();
 	let activeCount = 0;
 
 	const next = () => {
