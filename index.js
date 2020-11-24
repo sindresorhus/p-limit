@@ -1,19 +1,20 @@
 'use strict';
 const pTry = require('p-try');
+const Queue = require('yocto-queue');
 
 const pLimit = concurrency => {
 	if (!((Number.isInteger(concurrency) || concurrency === Infinity) && concurrency > 0)) {
 		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
 	}
 
-	const queue = [];
+	const queue = new Queue();
 	let activeCount = 0;
 
 	const next = () => {
 		activeCount--;
 
-		if (queue.length > 0) {
-			queue.shift()();
+		if (queue.size > 0) {
+			queue.dequeue()();
 		}
 	};
 
@@ -33,7 +34,7 @@ const pLimit = concurrency => {
 	};
 
 	const enqueue = (fn, resolve, ...args) => {
-		queue.push(run.bind(null, fn, resolve, ...args));
+		queue.enqueue(run.bind(null, fn, resolve, ...args));
 
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
@@ -42,8 +43,8 @@ const pLimit = concurrency => {
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
 			await Promise.resolve();
 
-			if (activeCount < concurrency && queue.length > 0) {
-				queue.shift()();
+			if (activeCount < concurrency && queue.size > 0) {
+				queue.dequeue()();
 			}
 		})();
 	};
@@ -54,11 +55,11 @@ const pLimit = concurrency => {
 			get: () => activeCount
 		},
 		pendingCount: {
-			get: () => queue.length
+			get: () => queue.size
 		},
 		clearQueue: {
 			value: () => {
-				queue.length = 0;
+				queue.clear();
 			}
 		}
 	});
