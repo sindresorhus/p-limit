@@ -38,7 +38,8 @@
 		"bluebird"
 	],
 	"dependencies": {
-		"p-try": "^2.0.0"
+		"p-try": "^2.0.0",
+		"yocto-queue": "^0.1.0"
 	},
 	"devDependencies": {
 		"ava": "^2.4.0",
