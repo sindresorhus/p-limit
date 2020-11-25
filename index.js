@@ -1,5 +1,4 @@
 'use strict';
-const pTry = require('p-try');
 const Queue = require('yocto-queue');
 
 const pLimit = concurrency => {
@@ -21,8 +20,7 @@ const pLimit = concurrency => {
 	const run = async (fn, resolve, ...args) => {
 		activeCount++;
 
-		// TODO: Get rid of `pTry`. It's not needed anymore.
-		const result = pTry(fn, ...args);
+		const result = (async () => fn(...args))();
 
 		resolve(result);
 
@@ -49,7 +47,10 @@ const pLimit = concurrency => {
 		})();
 	};
 
-	const generator = (fn, ...args) => new Promise(resolve => enqueue(fn, resolve, ...args));
+	const generator = (fn, ...args) => new Promise(resolve => {
+		enqueue(fn, resolve, ...args);
+	});
+
 	Object.defineProperties(generator, {
 		activeCount: {
 			get: () => activeCount

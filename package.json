@@ -38,16 +38,15 @@
 		"bluebird"
 	],
 	"dependencies": {
-		"p-try": "^2.0.0",
 		"yocto-queue": "^0.1.0"
 	},
 	"devDependencies": {
 		"ava": "^2.4.0",
-		"delay": "^4.1.0",
+		"delay": "^4.4.0",
 		"in-range": "^2.0.0",
 		"random-int": "^2.0.1",
 		"time-span": "^4.0.0",
-		"tsd": "^0.11.0",
-		"xo": "^0.26.0"
+		"tsd": "^0.13.1",
+		"xo": "^0.35.0"
 	}
 }
