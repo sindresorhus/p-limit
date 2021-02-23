@@ -17,7 +17,7 @@ const pLimit = concurrency => {
 		}
 	};
 
-	const run = async (fn, resolve, ...args) => {
+	const run = async (fn, resolve, args) => {
 		activeCount++;
 
 		const result = (async () => fn(...args))();
@@ -31,8 +31,8 @@ const pLimit = concurrency => {
 		next();
 	};
 
-	const enqueue = (fn, resolve, ...args) => {
-		queue.enqueue(run.bind(null, fn, resolve, ...args));
+	const enqueue = (fn, resolve, args) => {
+		queue.enqueue(run.bind(null, fn, resolve, args));
 
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
@@ -48,7 +48,7 @@ const pLimit = concurrency => {
 	};
 
 	const generator = (fn, ...args) => new Promise(resolve => {
-		enqueue(fn, resolve, ...args);
+		enqueue(fn, resolve, args);
 	});
 
 	Object.defineProperties(generator, {
