@@ -11,7 +11,7 @@ $ npm install p-limit
 ## Usage
 
 ```js
-const pLimit = require('p-limit');
+import pLimit from 'p-limit';
 
 const limit = pLimit(1);
 
@@ -21,11 +21,9 @@ const input = [
 	limit(() => doSomething())
 ];
 
-(async () => {
-	// Only one promise is run at once
-	const result = await Promise.all(input);
-	console.log(result);
-})();
+// Only one promise is run at once
+const result = await Promise.all(input);
+console.log(result);
 ```
 
 ## API

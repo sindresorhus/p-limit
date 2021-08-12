@@ -1,8 +1,7 @@
-'use strict';
-const Queue = require('yocto-queue');
+import Queue from 'yocto-queue';
 
-const pLimit = concurrency => {
-	if (!((Number.isInteger(concurrency) || concurrency === Infinity) && concurrency > 0)) {
+export default function pLimit(concurrency) {
+	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
 		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
 	}
 
@@ -32,7 +31,7 @@ const pLimit = concurrency => {
 	};
 
 	const enqueue = (fn, resolve, args) => {
-		queue.enqueue(run.bind(null, fn, resolve, args));
+		queue.enqueue(run.bind(undefined, fn, resolve, args));
 
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
@@ -53,19 +52,17 @@ const pLimit = concurrency => {
 
 	Object.defineProperties(generator, {
 		activeCount: {
-			get: () => activeCount
+			get: () => activeCount,
 		},
 		pendingCount: {
-			get: () => queue.size
+			get: () => queue.size,
 		},
 		clearQueue: {
 			value: () => {
 				queue.clear();
-			}
-		}
+			},
+		},
 	});
 
 	return generator;
-};
-
-module.exports = pLimit;
+}

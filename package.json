@@ -10,8 +10,10 @@
 		"email": "sindresorhus@gmail.com",
 		"url": "https://sindresorhus.com"
 	},
+	"type": "module",
+	"exports": "./index.js",
 	"engines": {
-		"node": ">=10"
+		"node": "^12.20.0 || ^14.13.1 || >=16.0.0"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -38,15 +40,15 @@
 		"bluebird"
 	],
 	"dependencies": {
-		"yocto-queue": "^0.1.0"
+		"yocto-queue": "^1.0.0"
 	},
 	"devDependencies": {
-		"ava": "^2.4.0",
-		"delay": "^4.4.0",
-		"in-range": "^2.0.0",
-		"random-int": "^2.0.1",
-		"time-span": "^4.0.0",
-		"tsd": "^0.13.1",
-		"xo": "^0.35.0"
+		"ava": "^3.15.0",
+		"delay": "^5.0.0",
+		"in-range": "^3.0.0",
+		"random-int": "^3.0.0",
+		"time-span": "^5.0.0",
+		"tsd": "^0.17.0",
+		"xo": "^0.44.0"
 	}
 }
