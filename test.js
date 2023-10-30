@@ -1,3 +1,4 @@
+import {AsyncLocalStorage} from 'node:async_hooks';
 import test from 'ava';
 import delay from 'delay';
 import inRange from 'in-range';
@@ -38,6 +39,23 @@ test('concurrency: 4', async t => {
 	}));
 
 	await Promise.all(input);
+});
+
+test('propagates async execution context properly', async t => {
+	const concurrency = 2;
+	const limit = pLimit(concurrency);
+	const store = new AsyncLocalStorage();
+
+	const checkId = async id => {
+		await Promise.resolve();
+		t.is(id, store.getStore()?.id);
+	};
+
+	const startCtx = async id => store.run({id}, () => limit(checkId, id));
+
+	await Promise.all(
+		Array.from({length: 100}, (_, id) => startCtx(id)),
+	);
 });
 
 test('non-promise returning function', async t => {
