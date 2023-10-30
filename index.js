@@ -1,3 +1,4 @@
+import {AsyncResource} from 'node:async_hooks';
 import Queue from 'yocto-queue';
 
 export default function pLimit(concurrency) {
@@ -31,7 +32,9 @@ export default function pLimit(concurrency) {
 	};
 
 	const enqueue = (fn, resolve, args) => {
-		queue.enqueue(run.bind(undefined, fn, resolve, args));
+		queue.enqueue(
+			AsyncResource.bind(run.bind(undefined, fn, resolve, args)),
+		);
 
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
