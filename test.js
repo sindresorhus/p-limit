@@ -51,7 +51,7 @@ test('propagates async execution context properly', async t => {
 		t.is(id, store.getStore()?.id);
 	};
 
-	const startCtx = async id => store.run({id}, () => limit(checkId, id));
+	const startContext = async id => store.run({id}, () => limit(checkId, id));
 
 	await Promise.all(
 		Array.from({length: 100}, (_, id) => startCtx(id)),
