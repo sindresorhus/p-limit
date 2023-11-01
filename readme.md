@@ -2,10 +2,12 @@
 
 > Run multiple promise-returning & async functions with limited concurrency
 
+*Works in Node.js and browsers.*
+
 ## Install
 
-```
-$ npm install p-limit
+```sh
+npm install p-limit
 ```
 
 ## Usage
@@ -80,20 +82,7 @@ This package is only about limiting the number of concurrent executions, while `
 
 ## Related
 
-- [p-queue](https://github.com/sindresorhus/p-queue) - Promise queue with concurrency control
 - [p-throttle](https://github.com/sindresorhus/p-throttle) - Throttle promise-returning & async functions
 - [p-debounce](https://github.com/sindresorhus/p-debounce) - Debounce promise-returning & async functions
 - [p-all](https://github.com/sindresorhus/p-all) - Run promise-returning & async functions concurrently with optional limited concurrency
 - [More…](https://github.com/sindresorhus/promise-fun)
-
----
-
-<div align="center">
-	<b>
-		<a href="https://tidelift.com/subscription/pkg/npm-p-limit?utm_source=npm-p-limit&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
-	</b>
-	<br>
-	<sub>
-		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-	</sub>
-</div>

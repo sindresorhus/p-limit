@@ -17,10 +17,10 @@ export default function pLimit(concurrency) {
 		}
 	};
 
-	const run = async (fn, resolve, args) => {
+	const run = async (function_, resolve, arguments_) => {
 		activeCount++;
 
-		const result = (async () => fn(...args))();
+		const result = (async () => function_(...arguments_))();
 
 		resolve(result);
 
@@ -31,9 +31,9 @@ export default function pLimit(concurrency) {
 		next();
 	};
 
-	const enqueue = (fn, resolve, args) => {
+	const enqueue = (function_, resolve, arguments_) => {
 		queue.enqueue(
-			AsyncResource.bind(run.bind(undefined, fn, resolve, args)),
+			AsyncResource.bind(run.bind(undefined, function_, resolve, arguments_)),
 		);
 
 		(async () => {
@@ -49,8 +49,8 @@ export default function pLimit(concurrency) {
 		})();
 	};
 
-	const generator = (fn, ...args) => new Promise(resolve => {
-		enqueue(fn, resolve, args);
+	const generator = (function_, ...arguments_) => new Promise(resolve => {
+		enqueue(function_, resolve, arguments_);
 	});
 
 	Object.defineProperties(generator, {
@@ -61,7 +61,7 @@ export default function pLimit(concurrency) {
 			get: () => queue.size,
 		},
 		clearQueue: {
-			value: () => {
+			value() {
 				queue.clear();
 			},
 		},

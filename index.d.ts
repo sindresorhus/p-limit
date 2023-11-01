@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/member-ordering */
-
-export interface LimitFunction {
+export type LimitFunction = {
 	/**
 	The number of promises that are currently running.
 	*/
@@ -26,10 +24,10 @@ export interface LimitFunction {
 	@returns The promise returned by calling `fn(...arguments)`.
 	*/
 	<Arguments extends unknown[], ReturnType>(
-		fn: (...arguments: Arguments) => PromiseLike<ReturnType> | ReturnType,
-		...arguments: Arguments
+		fn: (...arguments_: Arguments) => PromiseLike<ReturnType> | ReturnType,
+		...arguments_: Arguments
 	): Promise<ReturnType>;
-}
+};
 
 /**
 Run multiple promise-returning & async functions with limited concurrency.
