@@ -1,5 +1,5 @@
-import {AsyncResource} from 'node:async_hooks';
 import Queue from 'yocto-queue';
+import {AsyncResource} from '#async_hooks';
 
 export default function pLimit(concurrency) {
 	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {

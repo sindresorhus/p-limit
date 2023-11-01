@@ -1,10 +1,11 @@
-import {AsyncLocalStorage} from 'node:async_hooks';
 import test from 'ava';
 import delay from 'delay';
 import inRange from 'in-range';
 import timeSpan from 'time-span';
 import randomInt from 'random-int';
 import pLimit from './index.js';
+
+import {AsyncLocalStorage} from '#async_hooks';
 
 test('concurrency: 1', async t => {
 	const input = [
@@ -54,7 +55,7 @@ test('propagates async execution context properly', async t => {
 	const startContext = async id => store.run({id}, () => limit(checkId, id));
 
 	await Promise.all(
-		Array.from({length: 100}, (_, id) => startCtx(id)),
+		Array.from({length: 100}, (_, id) => startContext(id)),
 	);
 });
 

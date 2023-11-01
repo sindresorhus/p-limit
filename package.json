@@ -12,6 +12,12 @@
 	},
 	"type": "module",
 	"exports": "./index.js",
+	"imports": {
+		"#async_hooks": {
+			"node": "async_hooks",
+			"default": "./async-hooks-stub.js"
+		}
+	},
 	"engines": {
 		"node": "^12.20.0 || ^14.13.1 || >=16.0.0"
 	},
