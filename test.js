@@ -3,6 +3,7 @@ import delay from 'delay';
 import inRange from 'in-range';
 import timeSpan from 'time-span';
 import randomInt from 'random-int';
+import {AsyncLocalStorage} from '#async_hooks';
 import pLimit from './index.js';
 
 test('concurrency: 1', async t => {
@@ -38,6 +39,23 @@ test('concurrency: 4', async t => {
 	}));
 
 	await Promise.all(input);
+});
+
+test('propagates async execution context properly', async t => {
+	const concurrency = 2;
+	const limit = pLimit(concurrency);
+	const store = new AsyncLocalStorage();
+
+	const checkId = async id => {
+		await Promise.resolve();
+		t.is(id, store.getStore()?.id);
+	};
+
+	const startContext = async id => store.run({id}, () => limit(checkId, id));
+
+	await Promise.all(
+		Array.from({length: 100}, (_, id) => startContext(id)),
+	);
 });
 
 test('non-promise returning function', async t => {
