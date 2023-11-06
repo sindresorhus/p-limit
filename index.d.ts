@@ -24,7 +24,7 @@ export type LimitFunction = {
 	@returns The promise returned by calling `fn(...arguments)`.
 	*/
 	<Arguments extends unknown[], ReturnType>(
-		fn: (...arguments_: Arguments) => PromiseLike<ReturnType> | ReturnType,
+		function_: (...arguments_: Arguments) => PromiseLike<ReturnType> | ReturnType,
 		...arguments_: Arguments
 	): Promise<ReturnType>;
 };
