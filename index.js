@@ -1,15 +1,13 @@
 import Queue from 'yocto-queue';
 
 export default function pLimit(concurrency) {
-	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
-		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
-	}
+	validateConcurrency(concurrency);
 
 	const queue = new Queue();
 	let activeCount = 0;
 
 	const resumeNext = () => {
-		if (queue.size > 0) {
+		if (activeCount < concurrency && queue.size > 0) {
 			queue.dequeue()();
 			// Since `pendingCount` has been decreased by one, increase `activeCount` by one.
 			activeCount++;
@@ -72,7 +70,28 @@ export default function pLimit(concurrency) {
 				queue.clear();
 			},
 		},
+		concurrency: {
+			get: () => concurrency,
+
+			set(newConcurrency) {
+				validateConcurrency(newConcurrency);
+				concurrency = newConcurrency;
+
+				queueMicrotask(() => {
+					// eslint-disable-next-line no-unmodified-loop-condition
+					while (activeCount < concurrency && queue.size > 0) {
+						resumeNext();
+					}
+				});
+			},
+		},
 	});
 
 	return generator;
+}
+
+function validateConcurrency(concurrency) {
+	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
+		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
+	}
 }
