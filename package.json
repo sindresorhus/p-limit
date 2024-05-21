@@ -13,6 +13,8 @@
 	"type": "module",
 	"exports": {
 		"types": "./index.d.ts",
+		"import": "./index.js",
+		"require": "./index.cjs",
 		"default": "./index.js"
 	},
 	"imports": {
@@ -25,10 +27,13 @@
 		"node": ">=18"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd"
+		"test": "xo --ignore index.cjs && ava && tsd",
+		"rollup": "rollup index.js --file index.cjs --format cjs",
+		"publish": "npm run rollup && npm publish"
 	},
 	"files": [
 		"index.js",
+		"index.cjs",
 		"index.d.ts",
 		"async-hooks-stub.js"
 	],
@@ -57,6 +62,7 @@
 		"delay": "^6.0.0",
 		"in-range": "^3.0.0",
 		"random-int": "^3.0.0",
+		"rollup": "^4.17.2",
 		"time-span": "^5.1.0",
 		"tsd": "^0.29.0",
 		"xo": "^0.56.0"
