@@ -119,7 +119,7 @@ test('activeCount and pendingCount properties', async t => {
 	t.is(limit.activeCount, 0);
 	t.is(limit.pendingCount, 1);
 
-	await Promise.resolve();
+	await delay(0);
 	t.is(limit.activeCount, 1);
 	t.is(limit.pendingCount, 0);
 
@@ -130,7 +130,7 @@ test('activeCount and pendingCount properties', async t => {
 	const immediatePromises = Array.from({length: 5}, () => limit(() => delay(1000)));
 	const delayedPromises = Array.from({length: 3}, () => limit(() => delay(1000)));
 
-	await Promise.resolve();
+	await delay(0);
 	t.is(limit.activeCount, 5);
 	t.is(limit.pendingCount, 3);
 

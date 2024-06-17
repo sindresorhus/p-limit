@@ -1,5 +1,4 @@
 import Queue from 'yocto-queue';
-import {AsyncResource} from '#async_hooks';
 
 export default function pLimit(concurrency) {
 	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
@@ -8,6 +7,7 @@ export default function pLimit(concurrency) {
 
 	const queue = new Queue();
 	let activeCount = 0;
+	let starter = Promise.resolve();
 
 	const next = () => {
 		activeCount--;
@@ -32,16 +32,18 @@ export default function pLimit(concurrency) {
 	};
 
 	const enqueue = (function_, resolve, arguments_) => {
-		queue.enqueue(
-			AsyncResource.bind(run.bind(undefined, function_, resolve, arguments_)),
+		new Promise(r => {
+			queue.enqueue(r);
+		}).then(
+			run.bind(undefined, function_, resolve, arguments_),
 		);
 
-		(async () => {
+		starter = (async () => {
 			// This function needs to wait until the next microtask before comparing
 			// `activeCount` to `concurrency`, because `activeCount` is updated asynchronously
-			// when the run function is dequeued and called. The comparison in the if-statement
+			// after the r function is dequeued and called. The comparison in the if-statement
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
-			await Promise.resolve();
+			await starter;
 
 			if (activeCount < concurrency && queue.size > 0) {
 				queue.dequeue()();
