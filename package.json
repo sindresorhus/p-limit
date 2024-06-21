@@ -15,12 +15,6 @@
 		"types": "./index.d.ts",
 		"default": "./index.js"
 	},
-	"imports": {
-		"#async_hooks": {
-			"node": "async_hooks",
-			"default": "./async-hooks-stub.js"
-		}
-	},
 	"engines": {
 		"node": ">=18"
 	},
