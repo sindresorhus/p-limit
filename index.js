@@ -7,17 +7,23 @@ export default function pLimit(concurrency) {
 
 	const queue = new Queue();
 	let activeCount = 0;
-	let starter = Promise.resolve();
+	let activatingCount = 0;
+
+	const resumeNext = () => {
+		if (queue.size > 0) {
+			queue.dequeue()();
+			activatingCount++;
+		}
+	};
 
 	const next = () => {
 		activeCount--;
 
-		if (queue.size > 0) {
-			queue.dequeue()();
-		}
+		resumeNext();
 	};
 
 	const run = async (function_, resolve, arguments_) => {
+		activatingCount--;
 		activeCount++;
 
 		const result = (async () => function_(...arguments_))();
@@ -38,15 +44,15 @@ export default function pLimit(concurrency) {
 			run.bind(undefined, function_, resolve, arguments_),
 		);
 
-		starter = (async () => {
+		(async () => {
 			// This function needs to wait until the next microtask before comparing
 			// `activeCount` to `concurrency`, because `activeCount` is updated asynchronously
 			// after the r function is dequeued and called. The comparison in the if-statement
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
-			await starter;
+			await Promise.resolve();
 
-			if (activeCount < concurrency && queue.size > 0) {
-				queue.dequeue()();
+			if (activeCount + activatingCount < concurrency) {
+				resumeNext();
 			}
 		})();
 	};
