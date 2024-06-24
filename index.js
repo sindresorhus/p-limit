@@ -7,12 +7,12 @@ export default function pLimit(concurrency) {
 
 	const queue = new Queue();
 	let activeCount = 0;
-	let activatingCount = 0;
 
 	const resumeNext = () => {
 		if (queue.size > 0) {
 			queue.dequeue()();
-			activatingCount++;
+			// Since `pendingCount` has been decreased by one, increase `activeCount` by one.
+			activeCount++;
 		}
 	};
 
@@ -23,9 +23,6 @@ export default function pLimit(concurrency) {
 	};
 
 	const run = async (function_, resolve, arguments_) => {
-		activatingCount--;
-		activeCount++;
-
 		const result = (async () => function_(...arguments_))();
 
 		resolve(result);
@@ -51,7 +48,7 @@ export default function pLimit(concurrency) {
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
 			await Promise.resolve();
 
-			if (activeCount + activatingCount < concurrency) {
+			if (activeCount < concurrency) {
 				resumeNext();
 			}
 		})();
