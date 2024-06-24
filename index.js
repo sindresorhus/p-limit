@@ -35,6 +35,8 @@ export default function pLimit(concurrency) {
 	};
 
 	const enqueue = (function_, resolve, arguments_) => {
+		// Queue `resolve` function (here `r` function) instead of `run` function
+		// to preserve asynchronous context.
 		new Promise(r => {
 			queue.enqueue(r);
 		}).then(
