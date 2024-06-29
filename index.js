@@ -35,10 +35,10 @@ export default function pLimit(concurrency) {
 	};
 
 	const enqueue = (function_, resolve, arguments_) => {
-		// Queue `resolve` function (here `r` function) instead of `run` function
+		// Queue `internalResolve` instead of the `run` function
 		// to preserve asynchronous context.
-		new Promise(r => {
-			queue.enqueue(r);
+		new Promise(internalResolve => {
+			queue.enqueue(internalResolve);
 		}).then(
 			run.bind(undefined, function_, resolve, arguments_),
 		);
@@ -46,7 +46,7 @@ export default function pLimit(concurrency) {
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
 			// `activeCount` to `concurrency`, because `activeCount` is updated asynchronously
-			// after the r function is dequeued and called. The comparison in the if-statement
+			// after the `internalResolve` function is dequeued and called. The comparison in the if-statement
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
 			await Promise.resolve();
 
