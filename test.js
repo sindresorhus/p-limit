@@ -1,10 +1,10 @@
+import {AsyncLocalStorage} from 'node:async_hooks';
 import test from 'ava';
 import delay from 'delay';
 import inRange from 'in-range';
 import timeSpan from 'time-span';
 import randomInt from 'random-int';
 import pLimit from './index.js';
-import {AsyncLocalStorage} from '#async_hooks';
 
 test('concurrency: 1', async t => {
 	const input = [

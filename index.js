@@ -1,5 +1,4 @@
 import Queue from 'yocto-queue';
-import {AsyncResource} from '#async_hooks';
 
 export default function pLimit(concurrency) {
 	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
@@ -9,17 +8,21 @@ export default function pLimit(concurrency) {
 	const queue = new Queue();
 	let activeCount = 0;
 
-	const next = () => {
-		activeCount--;
-
+	const resumeNext = () => {
 		if (queue.size > 0) {
 			queue.dequeue()();
+			// Since `pendingCount` has been decreased by one, increase `activeCount` by one.
+			activeCount++;
 		}
 	};
 
-	const run = async (function_, resolve, arguments_) => {
-		activeCount++;
+	const next = () => {
+		activeCount--;
 
+		resumeNext();
+	};
+
+	const run = async (function_, resolve, arguments_) => {
 		const result = (async () => function_(...arguments_))();
 
 		resolve(result);
@@ -32,19 +35,23 @@ export default function pLimit(concurrency) {
 	};
 
 	const enqueue = (function_, resolve, arguments_) => {
-		queue.enqueue(
-			AsyncResource.bind(run.bind(undefined, function_, resolve, arguments_)),
+		// Queue `internalResolve` instead of the `run` function
+		// to preserve asynchronous context.
+		new Promise(internalResolve => {
+			queue.enqueue(internalResolve);
+		}).then(
+			run.bind(undefined, function_, resolve, arguments_),
 		);
 
 		(async () => {
 			// This function needs to wait until the next microtask before comparing
 			// `activeCount` to `concurrency`, because `activeCount` is updated asynchronously
-			// when the run function is dequeued and called. The comparison in the if-statement
+			// after the `internalResolve` function is dequeued and called. The comparison in the if-statement
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
 			await Promise.resolve();
 
-			if (activeCount < concurrency && queue.size > 0) {
-				queue.dequeue()();
+			if (activeCount < concurrency) {
+				resumeNext();
 			}
 		})();
 	};
