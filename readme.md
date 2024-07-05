@@ -76,7 +76,7 @@ Note: This does not cancel promises that are already running.
 
 ### limit.concurrency
 
-Concurrency limit.
+Get or set the concurrency limit.
 
 ## FAQ
 
