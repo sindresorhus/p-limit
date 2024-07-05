@@ -190,7 +190,7 @@ test('change concurrency to smaller value', async t => {
 			--running;
 		}),
 	);
-	await Promise.resolve();
+	await delay(0);
 	t.is(running, 4);
 
 	limit.concurrency = 2;
@@ -210,7 +210,7 @@ test('change concurrency to bigger value', async t => {
 			--running;
 		}),
 	);
-	await Promise.resolve();
+	await delay(0);
 	t.is(running, 2);
 
 	limit.concurrency = 4;
