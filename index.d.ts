@@ -10,6 +10,11 @@ export type LimitFunction = {
 	readonly pendingCount: number;
 
 	/**
+	Get or set the concurrency limit.
+	*/
+	concurrency: number;
+
+	/**
 	Discard pending promises that are waiting to run.
 
 	This might be useful if you want to teardown the queue at the end of your program's lifecycle or discard any function calls referencing an intermediary state of your app.

@@ -177,3 +177,43 @@ test('throws on invalid concurrency argument', t => {
 		pLimit(true);
 	});
 });
+
+test('change concurrency to smaller value', async t => {
+	const limit = pLimit(4);
+	let running = 0;
+	const log = [];
+	const promises = Array.from({length: 10}).map(() =>
+		limit(async () => {
+			++running;
+			log.push(running);
+			await delay(50);
+			--running;
+		}),
+	);
+	await delay(0);
+	t.is(running, 4);
+
+	limit.concurrency = 2;
+	await Promise.all(promises);
+	t.deepEqual(log, [1, 2, 3, 4, 2, 2, 2, 2, 2, 2]);
+});
+
+test('change concurrency to bigger value', async t => {
+	const limit = pLimit(2);
+	let running = 0;
+	const log = [];
+	const promises = Array.from({length: 10}).map(() =>
+		limit(async () => {
+			++running;
+			log.push(running);
+			await delay(50);
+			--running;
+		}),
+	);
+	await delay(0);
+	t.is(running, 2);
+
+	limit.concurrency = 4;
+	await Promise.all(promises);
+	t.deepEqual(log, [1, 2, 3, 4, 4, 4, 4, 4, 4, 4]);
+});

@@ -74,6 +74,10 @@ This might be useful if you want to teardown the queue at the end of your progra
 
 Note: This does not cancel promises that are already running.
 
+### limit.concurrency
+
+Get or set the concurrency limit.
+
 ## FAQ
 
 ### How is this different from the [`p-queue`](https://github.com/sindresorhus/p-queue) package?
