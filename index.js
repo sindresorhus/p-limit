@@ -6,57 +6,29 @@ export default function pLimit(concurrency) {
 	const queue = new Queue();
 	let activeCount = 0;
 
-	const resumeNext = () => {
+	const next = () => {
 		if (activeCount < concurrency && queue.size > 0) {
-			queue.dequeue()();
-			// Since `pendingCount` has been decreased by one, increase `activeCount` by one.
 			activeCount++;
+			queue.dequeue()();
 		}
 	};
 
-	const next = () => {
-		activeCount--;
+	const generator = async (function_, ...arguments_) => {
+		const dequeuePromise = new Promise(resolve => {
+			queue.enqueue(resolve);
+		});
 
-		resumeNext();
-	};
+		queueMicrotask(next);
 
-	const run = async (function_, resolve, arguments_) => {
-		const result = (async () => function_(...arguments_))();
-
-		resolve(result);
+		await dequeuePromise;
 
 		try {
-			await result;
-		} catch {}
-
-		next();
+			return await function_(...arguments_);
+		} finally {
+			activeCount--;
+			next();
+		}
 	};
-
-	const enqueue = (function_, resolve, arguments_) => {
-		// Queue `internalResolve` instead of the `run` function
-		// to preserve asynchronous context.
-		new Promise(internalResolve => {
-			queue.enqueue(internalResolve);
-		}).then(
-			run.bind(undefined, function_, resolve, arguments_),
-		);
-
-		(async () => {
-			// This function needs to wait until the next microtask before comparing
-			// `activeCount` to `concurrency`, because `activeCount` is updated asynchronously
-			// after the `internalResolve` function is dequeued and called. The comparison in the if-statement
-			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
-			await Promise.resolve();
-
-			if (activeCount < concurrency) {
-				resumeNext();
-			}
-		})();
-	};
-
-	const generator = (function_, ...arguments_) => new Promise(resolve => {
-		enqueue(function_, resolve, arguments_);
-	});
 
 	Object.defineProperties(generator, {
 		activeCount: {
@@ -80,7 +52,7 @@ export default function pLimit(concurrency) {
 				queueMicrotask(() => {
 					// eslint-disable-next-line no-unmodified-loop-condition
 					while (activeCount < concurrency && queue.size > 0) {
-						resumeNext();
+						next();
 					}
 				});
 			},
