@@ -37,8 +37,7 @@ Returns a `limit` function.
 #### concurrency
 
 Type: `number`\
-Minimum: `1`\
-Default: `Infinity`
+Minimum: `1`
 
 Concurrency limit.
 
