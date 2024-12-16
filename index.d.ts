@@ -42,7 +42,7 @@ Run multiple promise-returning & async functions with limited concurrency.
 */
 export default function pLimit(concurrency: number): LimitFunction;
 
-export type LimitFunctionOption = {
+export type Options = {
 	/**
 	Concurrency limit
 	*/
@@ -50,13 +50,12 @@ export type LimitFunctionOption = {
 };
 
 /**
-Return a function with limited concurrency
+Return a function with limited concurrency.
 
 @param function_ - Promise-returning/async function.
-@param option
-@return Function with limited concurrency
+@return Function with limited concurrency.
 */
 export function limitFunction<Arguments extends unknown[], ReturnType>(
 	function_: (...arguments_: Arguments) => PromiseLike<ReturnType> | ReturnType,
-	option: LimitFunctionOption
+	option: Options
 ): (...arguments_: Arguments) => Promise<ReturnType>;

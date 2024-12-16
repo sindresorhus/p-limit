@@ -28,19 +28,6 @@ const result = await Promise.all(input);
 console.log(result);
 ```
 
-```js
-import {limitFunction} from 'p-limit';
-
-const limitFunction_ = limitFunction(async () => {
-	return doSomething();
-}, {concurrency: 1});
-
-const input = Array.from({length: 10}, limitFunction_);
-
-// Only one promise is run at once
-await Promise.all(input);
-```
-
 ## API
 
 ### pLimit(concurrency)
@@ -92,7 +79,9 @@ Get or set the concurrency limit.
 
 ### limitFunction(fn, options)
 
-Return a function with limited concurrency
+Return a function with limited concurrency.
+
+Note: Unlike fucntion return by `pLimit`, the return by `limitFunction` is already limited, do not need call with `limit`.
 
 #### fn
 
@@ -106,11 +95,21 @@ Type: `object`
 
 #### concurrency
 
-Type: `number`(Interget)
-
+Type: `number`\
 Minimum: `1`
 
-#### option
+```js
+import {limitFunction} from 'p-limit';
+
+const limitFunction_ = limitFunction(async () => {
+	return doSomething();
+}, {concurrency: 1});
+
+const input = Array.from({length: 10}, limitFunction_);
+
+// Only one promise is run at once
+await Promise.all(input);
+```
 
 ## FAQ
 
