@@ -85,6 +85,19 @@ The returned function manages its own concurrent executions, allowing you to cal
 
 Ideal for scenarios where you need to control the number of simultaneous executions of a single function, rather than managing concurrency across multiple functions.
 
+```js
+import {limitFunction} from 'p-limit';
+
+const limitedFunction = limitFunction(async () => {
+	return doSomething();
+}, {concurrency: 1});
+
+const input = Array.from({length: 10}, limitedFunction);
+
+// Only one promise is run at once.
+await Promise.all(input);
+```
+
 #### fn
 
 Type: `Function`
@@ -100,18 +113,7 @@ Type: `object`
 Type: `number`\
 Minimum: `1`
 
-```js
-import {limitFunction} from 'p-limit';
-
-const limitFunction_ = limitFunction(async () => {
-	return doSomething();
-}, {concurrency: 1});
-
-const input = Array.from({length: 10}, limitFunction_);
-
-// Only one promise is run at once
-await Promise.all(input);
-```
+Concurrency limit.
 
 ## FAQ
 
