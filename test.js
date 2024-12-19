@@ -218,18 +218,18 @@ test('change concurrency to bigger value', async t => {
 	t.deepEqual(log, [1, 2, 3, 4, 4, 4, 4, 4, 4, 4]);
 });
 
-test('limit function with concurrency', async t => {
+test('limitFunction()', async t => {
 	const concurrency = 5;
 	let running = 0;
 
-	const limitFunction_ = limitFunction(async () => {
+	const limitedFunction = limitFunction(async () => {
 		running++;
 		t.true(running <= concurrency);
 		await delay(randomInt(30, 200));
 		running--;
 	}, {concurrency});
 
-	const input = Array.from({length: 100}, limitFunction_);
+	const input = Array.from({length: 100}, limitedFunction);
 
 	await Promise.all(input);
 });
