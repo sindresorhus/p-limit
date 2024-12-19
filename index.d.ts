@@ -41,3 +41,41 @@ Run multiple promise-returning & async functions with limited concurrency.
 @returns A `limit` function.
 */
 export default function pLimit(concurrency: number): LimitFunction;
+
+export type Options = {
+	/**
+	Concurrency limit.
+
+ 	Minimum: `1`.
+	*/
+	readonly concurrency: number;
+};
+
+/**
+Returns a function with limited concurrency.
+
+The returned function manages its own concurrent executions, allowing you to call it multiple times without exceeding the specified concurrency limit.
+
+Ideal for scenarios where you need to control the number of simultaneous executions of a single function, rather than managing concurrency across multiple functions.
+
+@param function_ - Promise-returning/async function.
+@return Function with limited concurrency.
+
+@example
+```
+import {limitFunction} from 'p-limit';
+
+const limitedFunction = limitFunction(async () => {
+	return doSomething();
+}, {concurrency: 1});
+
+const input = Array.from({length: 10}, limitedFunction);
+
+// Only one promise is run at once.
+await Promise.all(input);
+```
+*/
+export function limitFunction<Arguments extends unknown[], ReturnType>(
+	function_: (...arguments_: Arguments) => PromiseLike<ReturnType> | ReturnType,
+	option: Options
+): (...arguments_: Arguments) => Promise<ReturnType>;

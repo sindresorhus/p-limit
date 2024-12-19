@@ -4,7 +4,7 @@ import delay from 'delay';
 import inRange from 'in-range';
 import timeSpan from 'time-span';
 import randomInt from 'random-int';
-import pLimit from './index.js';
+import pLimit, {limitFunction} from './index.js';
 
 test('concurrency: 1', async t => {
 	const input = [
@@ -216,4 +216,20 @@ test('change concurrency to bigger value', async t => {
 	limit.concurrency = 4;
 	await Promise.all(promises);
 	t.deepEqual(log, [1, 2, 3, 4, 4, 4, 4, 4, 4, 4]);
+});
+
+test('limitFunction()', async t => {
+	const concurrency = 5;
+	let running = 0;
+
+	const limitedFunction = limitFunction(async () => {
+		running++;
+		t.true(running <= concurrency);
+		await delay(randomInt(30, 200));
+		running--;
+	}, {concurrency});
+
+	const input = Array.from({length: 100}, limitedFunction);
+
+	await Promise.all(input);
 });

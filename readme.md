@@ -30,7 +30,7 @@ console.log(result);
 
 ## API
 
-### pLimit(concurrency)
+### pLimit(concurrency) <sup>default export</sup>
 
 Returns a `limit` function.
 
@@ -76,6 +76,44 @@ Note: This does not cancel promises that are already running.
 ### limit.concurrency
 
 Get or set the concurrency limit.
+
+### limitFunction(fn, options) <sup>named export</sup>
+
+Returns a function with limited concurrency.
+
+The returned function manages its own concurrent executions, allowing you to call it multiple times without exceeding the specified concurrency limit.
+
+Ideal for scenarios where you need to control the number of simultaneous executions of a single function, rather than managing concurrency across multiple functions.
+
+```js
+import {limitFunction} from 'p-limit';
+
+const limitedFunction = limitFunction(async () => {
+	return doSomething();
+}, {concurrency: 1});
+
+const input = Array.from({length: 10}, limitedFunction);
+
+// Only one promise is run at once.
+await Promise.all(input);
+```
+
+#### fn
+
+Type: `Function`
+
+Promise-returning/async function.
+
+#### options
+
+Type: `object`
+
+#### concurrency
+
+Type: `number`\
+Minimum: `1`
+
+Concurrency limit.
 
 ## FAQ
 

@@ -90,6 +90,13 @@ export default function pLimit(concurrency) {
 	return generator;
 }
 
+export function limitFunction(function_, option) {
+	const {concurrency} = option;
+	const limit = pLimit(concurrency);
+
+	return (...arguments_) => limit(() => function_(...arguments_));
+}
+
 function validateConcurrency(concurrency) {
 	if (!((Number.isInteger(concurrency) || concurrency === Number.POSITIVE_INFINITY) && concurrency > 0)) {
 		throw new TypeError('Expected `concurrency` to be a number from 1 and up');
