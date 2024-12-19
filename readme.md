@@ -81,7 +81,9 @@ Get or set the concurrency limit.
 
 Return a function with limited concurrency.
 
-Note: Unlike fucntion return by `pLimit`, the return by `limitFunction` is already limited, do not need call with `limit`.
+You can call this function multiple times, and it will manage the concurrency of its own calls.
+
+This function is useful when you need to limit the number of concurrent executions of a specific function, rather than managing concurrency for multiple different functions.
 
 #### fn
 

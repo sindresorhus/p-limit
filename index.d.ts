@@ -52,6 +52,10 @@ export type Options = {
 /**
 Return a function with limited concurrency.
 
+You can call this function multiple times, and it will manage the concurrency of its own calls.
+
+This function is useful when you need to limit the number of concurrent executions of a specific function, rather than managing concurrency for multiple different functions.
+
 @param function_ - Promise-returning/async function.
 @return Function with limited concurrency.
 */
