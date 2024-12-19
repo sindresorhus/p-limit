@@ -44,9 +44,11 @@ export default function pLimit(concurrency: number): LimitFunction;
 
 export type Options = {
 	/**
-	Concurrency limit
+	Concurrency limit.
+
+ 	Minimum: `1`.
 	*/
-	concurrency: number;
+	readonly concurrency: number;
 };
 
 /**
