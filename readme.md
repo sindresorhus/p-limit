@@ -30,7 +30,7 @@ console.log(result);
 
 ## API
 
-### pLimit(concurrency)
+### pLimit(concurrency) <sup>default export</sup>
 
 Returns a `limit` function.
 
@@ -77,7 +77,7 @@ Note: This does not cancel promises that are already running.
 
 Get or set the concurrency limit.
 
-### limitFunction(fn, options)
+### limitFunction(fn, options) <sup>named export</sup>
 
 Returns a function with limited concurrency.
 
