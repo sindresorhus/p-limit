@@ -24,6 +24,18 @@ export type LimitFunction = {
 	clearQueue: () => void;
 
 	/**
+	Process an array of inputs with limited concurrency.
+
+	@param array - An array containing an argument for the given function.
+	@param function_ - Promise-returning/async function.
+	@returns A Promise that returns an array of results.
+	*/
+	map: <Input, ReturnType> (
+		array: Input[],
+		function_: (input: Input) => PromiseLike<ReturnType> | ReturnType
+	) => Promise<ReturnType[]>;
+
+	/**
 	@param fn - Promise-returning/async function.
 	@param arguments - Any arguments to pass through to `fn`. Support for passing arguments on to the `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't need this optimization unless you're pushing a lot of functions.
 	@returns The promise returned by calling `fn(...arguments)`.

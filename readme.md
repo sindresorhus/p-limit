@@ -57,6 +57,14 @@ Any arguments to pass through to `fn`.
 
 Support for passing arguments on to the `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't need this optimization unless you're pushing a *lot* of functions.
 
+### limit.map(array, fn)
+
+Process an array of inputs with limited concurrency.
+
+Returns a promise equivalent to `Promise.all(array.map(item => limit(fn, item)))`.
+
+This is a convenience function for processing inputs that arrive in batches. For more complex use cases, see [p-map](https://github.com/sindresorhus/p-map).
+
 ### limit.activeCount
 
 The number of promises that are currently running.
@@ -125,5 +133,6 @@ This package is only about limiting the number of concurrent executions, while `
 
 - [p-throttle](https://github.com/sindresorhus/p-throttle) - Throttle promise-returning & async functions
 - [p-debounce](https://github.com/sindresorhus/p-debounce) - Debounce promise-returning & async functions
+- [p-map](https://github.com/sindresorhus/p-map) - Run promise-returning & async functions concurrently with different inputs
 - [p-all](https://github.com/sindresorhus/p-all) - Run promise-returning & async functions concurrently with optional limited concurrency
 - [More…](https://github.com/sindresorhus/promise-fun)
