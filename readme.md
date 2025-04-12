@@ -57,6 +57,12 @@ Any arguments to pass through to `fn`.
 
 Support for passing arguments on to the `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't need this optimization unless you're pushing a *lot* of functions.
 
+### limit.map(list, fn)
+
+Returns a promise equivalent to `Promise.all(list.map((val) => limit(fn, val)))`
+
+This is a convenience function for processing inputs that arrive in batches.
+
 ### limit.activeCount
 
 The number of promises that are currently running.

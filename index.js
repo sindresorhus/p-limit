@@ -85,6 +85,12 @@ export default function pLimit(concurrency) {
 				});
 			},
 		},
+		map: {
+			async value(list, function_) {
+				const promises = list.map(value => this(function_, value));
+				return Promise.all(promises);
+			},
+		},
 	});
 
 	return generator;

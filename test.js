@@ -156,6 +156,13 @@ test('clearQueue', async t => {
 	t.is(limit.pendingCount, 0);
 });
 
+test('map', async t => {
+	const limit = pLimit(1);
+	const results = await limit.map([1, 2, 3, 4, 5, 6, 7], input => input + 1);
+
+	t.deepEqual(results, [2, 3, 4, 5, 6, 7, 8]);
+});
+
 test('throws on invalid concurrency argument', t => {
 	t.throws(() => {
 		pLimit(0);
@@ -233,3 +240,4 @@ test('limitFunction()', async t => {
 
 	await Promise.all(input);
 });
+
