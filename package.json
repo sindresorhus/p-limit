@@ -17,7 +17,7 @@
 	},
 	"sideEffects": false,
 	"engines": {
-		"node": ">=18"
+		"node": ">=20"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -44,15 +44,15 @@
 		"bluebird"
 	],
 	"dependencies": {
-		"yocto-queue": "^1.1.1"
+		"yocto-queue": "^1.2.1"
 	},
 	"devDependencies": {
-		"ava": "^6.1.3",
+		"ava": "^6.4.1",
 		"delay": "^6.0.0",
 		"in-range": "^3.0.0",
 		"random-int": "^3.0.0",
 		"time-span": "^5.1.0",
-		"tsd": "^0.31.1",
-		"xo": "^0.58.0"
+		"tsd": "^0.33.0",
+		"xo": "^1.2.1"
 	}
 }

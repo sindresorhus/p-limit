@@ -53,9 +53,7 @@ test('propagates async execution context properly', async t => {
 
 	const startContext = async id => store.run({id}, () => limit(checkId, id));
 
-	await Promise.all(
-		Array.from({length: 100}, (_, id) => startContext(id)),
-	);
+	await Promise.all(Array.from({length: 100}, (_, id) => startContext(id)));
 });
 
 test('non-promise returning function', async t => {
@@ -78,7 +76,9 @@ test('continues after sync throw', async t => {
 		}),
 	];
 
-	await Promise.all(promises).catch(() => {});
+	try {
+		await Promise.all(promises);
+	} catch {}
 
 	t.is(ran, true);
 });
@@ -207,8 +207,7 @@ test('change concurrency to smaller value', async t => {
 			log.push(running);
 			await delay(50);
 			--running;
-		}),
-	);
+		}));
 	await delay(0);
 	t.is(running, 4);
 
@@ -227,8 +226,7 @@ test('change concurrency to bigger value', async t => {
 			log.push(running);
 			await delay(50);
 			--running;
-		}),
-	);
+		}));
 	await delay(0);
 	t.is(running, 2);
 

@@ -7,6 +7,7 @@ export default function pLimit(concurrency) {
 	let activeCount = 0;
 
 	const resumeNext = () => {
+		// Process the next queued function if we're under the concurrency limit
 		if (activeCount < concurrency && queue.size > 0) {
 			activeCount++;
 			queue.dequeue()();
@@ -19,26 +20,31 @@ export default function pLimit(concurrency) {
 	};
 
 	const run = async (function_, resolve, arguments_) => {
+		// Execute the function and capture the result promise
 		const result = (async () => function_(...arguments_))();
 
+		// Resolve immediately with the promise (don't wait for completion)
 		resolve(result);
 
+		// Wait for the function to complete (success or failure)
+		// We catch errors here to prevent unhandled rejections,
+		// but the original promise rejection is preserved for the caller
 		try {
 			await result;
 		} catch {}
 
+		// Decrement active count and process next queued function
 		next();
 	};
 
 	const enqueue = (function_, resolve, arguments_) => {
-		// Queue `internalResolve` instead of the `run` function
-		// to preserve asynchronous context.
-		new Promise(internalResolve => {
+		// Queue the internal resolve function instead of the run function
+		// to preserve the asynchronous execution context.
+		new Promise(internalResolve => { // eslint-disable-line promise/param-names
 			queue.enqueue(internalResolve);
-		}).then(
-			run.bind(undefined, function_, resolve, arguments_),
-		);
+		}).then(run.bind(undefined, function_, resolve, arguments_)); // eslint-disable-line promise/prefer-await-to-then
 
+		// Start processing immediately if we haven't reached the concurrency limit
 		if (activeCount < concurrency) {
 			resumeNext();
 		}
@@ -86,8 +92,8 @@ export default function pLimit(concurrency) {
 	return generator;
 }
 
-export function limitFunction(function_, option) {
-	const {concurrency} = option;
+export function limitFunction(function_, options) {
+	const {concurrency} = options;
 	const limit = pLimit(concurrency);
 
 	return (...arguments_) => limit(() => function_(...arguments_));
