@@ -20,7 +20,8 @@
 		"node": ">=20"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd"
+		"test": "xo && ava && tsd",
+		"benchmark": "node benchmark.js"
 	},
 	"files": [
 		"index.js",
