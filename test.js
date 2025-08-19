@@ -175,6 +175,21 @@ test('map', async t => {
 	t.deepEqual(results, [2, 3, 4, 5, 6, 7, 8]);
 });
 
+test('map passes index and preserves order with concurrency', async t => {
+	const limit = pLimit(3);
+	const inputs = [10, 10, 10, 10, 10];
+
+	// eslint-disable-next-line unicorn/no-array-method-this-argument
+	const results = await limit.map(inputs, async (value, index) => {
+		// Simulate variable async duration per index to shuffle completion order
+		await delay((inputs.length - index) * 5);
+		return value + index;
+	});
+
+	// Results should be in input order and include index
+	t.deepEqual(results, [10, 11, 12, 13, 14]);
+});
+
 test('throws on invalid concurrency argument', t => {
 	t.throws(() => {
 		pLimit(0);

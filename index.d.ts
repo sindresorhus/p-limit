@@ -26,13 +26,15 @@ export type LimitFunction = {
 	/**
 	Process an array of inputs with limited concurrency.
 
+	The mapper function receives the item value and its index.
+
 	@param array - An array containing an argument for the given function.
-	@param function_ - Promise-returning/async function.
+	@param mapperFunction - Promise-returning/async function.
 	@returns A Promise that returns an array of results.
 	*/
 	map: <Input, ReturnType> (
 		array: Input[],
-		function_: (input: Input) => PromiseLike<ReturnType> | ReturnType
+		mapperFunction: (input: Input, index: number) => PromiseLike<ReturnType> | ReturnType
 	) => Promise<ReturnType[]>;
 
 	/**
