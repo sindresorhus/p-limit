@@ -1,5 +1,5 @@
-import {expectType} from 'tsd';
-import pLimit from './index.js';
+import {expectType, expectError} from 'tsd';
+import pLimit, {limitFunction} from './index.js';
 
 const limit = pLimit(1);
 
@@ -18,3 +18,9 @@ expectType<number>(limit.activeCount);
 expectType<number>(limit.pendingCount);
 
 expectType<void>(limit.clearQueue());
+
+// LimitFunction should require a Promise-returning function
+const lf = limitFunction(async (_a: string) => 'ok', {concurrency: 1});
+expectType<Promise<string>>(lf('input'));
+
+expectError(limitFunction((_a: string) => 'x', {concurrency: 1}));

@@ -33,7 +33,7 @@ export type LimitFunction = {
 	@returns A Promise that returns an array of results.
 	*/
 	map: <Input, ReturnType> (
-		array: Input[],
+		array: readonly Input[],
 		mapperFunction: (input: Input, index: number) => PromiseLike<ReturnType> | ReturnType
 	) => Promise<ReturnType[]>;
 
@@ -90,6 +90,6 @@ await Promise.all(input);
 ```
 */
 export function limitFunction<Arguments extends unknown[], ReturnType>(
-	function_: (...arguments_: Arguments) => PromiseLike<ReturnType> | ReturnType,
-	option: Options
+	function_: (...arguments_: Arguments) => PromiseLike<ReturnType>,
+	options: Options
 ): (...arguments_: Arguments) => Promise<ReturnType>;
