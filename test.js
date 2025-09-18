@@ -1,6 +1,6 @@
 import {AsyncLocalStorage} from 'node:async_hooks';
+import {setTimeout as delay} from 'node:timers/promises';
 import test from 'ava';
-import delay from 'delay';
 import inRange from 'in-range';
 import timeSpan from 'time-span';
 import randomInt from 'random-int';
