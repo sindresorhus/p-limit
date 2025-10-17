@@ -190,6 +190,24 @@ test('map passes index and preserves order with concurrency', async t => {
 	t.deepEqual(results, [10, 11, 12, 13, 14]);
 });
 
+test('map accepts an iterable (set)', async t => {
+	const limit = pLimit(2);
+	const inputs = new Set([1, 2, 3, 4]);
+
+	const results = await limit.map(inputs, input => input * 2); // eslint-disable-line unicorn/no-array-method-this-argument
+
+	t.deepEqual(results, [2, 4, 6, 8]);
+});
+
+test('map accepts an iterable (array iterator)', async t => {
+	const limit = pLimit(2);
+	const inputs = [1, 2, 3, 4].values();
+
+	const results = await limit.map(inputs, input => input * 2); // eslint-disable-line unicorn/no-array-method-this-argument
+
+	t.deepEqual(results, [2, 4, 6, 8]);
+});
+
 test('throws on invalid concurrency argument', t => {
 	t.throws(() => {
 		pLimit(0);

@@ -33,7 +33,7 @@ export type LimitFunction = {
 	@returns A Promise that returns an array of results.
 	*/
 	map: <Input, ReturnType> (
-		array: readonly Input[],
+		array: Iterable<Input> | ArrayLike<Input>,
 		mapperFunction: (input: Input, index: number) => PromiseLike<ReturnType> | ReturnType
 	) => Promise<ReturnType[]>;
 

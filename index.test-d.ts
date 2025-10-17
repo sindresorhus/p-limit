@@ -24,3 +24,7 @@ const lf = limitFunction(async (_a: string) => 'ok', {concurrency: 1});
 expectType<Promise<string>>(lf('input'));
 
 expectError(limitFunction((_a: string) => 'x', {concurrency: 1}));
+
+// LimitFunction.map accepts iterables
+expectType<Promise<string[]>>(limit.map(new Set(['a', 'b', 'c']), async x => x + x));
+expectType<Promise<number[]>>(limit.map([1, 2, 3].values(), async x => x * 2));
