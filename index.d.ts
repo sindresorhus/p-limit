@@ -24,16 +24,16 @@ export type LimitFunction = {
 	clearQueue: () => void;
 
 	/**
-	Process an array of inputs with limited concurrency.
+	Process an iterable of inputs with limited concurrency.
 
 	The mapper function receives the item value and its index.
 
-	@param array - An array containing an argument for the given function.
+	@param iterable - An iterable containing an argument for the given function.
 	@param mapperFunction - Promise-returning/async function.
 	@returns A Promise that returns an array of results.
 	*/
 	map: <Input, ReturnType> (
-		array: Iterable<Input> | ArrayLike<Input>,
+		iterable: Iterable<Input>,
 		mapperFunction: (input: Input, index: number) => PromiseLike<ReturnType> | ReturnType
 	) => Promise<ReturnType[]>;
 
