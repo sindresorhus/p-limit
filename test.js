@@ -355,3 +355,76 @@ test('limitFunction()', async t => {
 
 	await Promise.all(input);
 });
+
+test('pause and resume queue', async t => {
+	const limit = pLimit(1);
+	const results = [];
+
+	const promise1 = limit(async () => {
+		await delay(50);
+		results.push(1);
+	});
+
+	const promise2 = limit(async () => {
+		await delay(50);
+		results.push(2);
+	});
+
+	const promise3 = limit(async () => {
+		await delay(50);
+		results.push(3);
+	});
+
+	t.false(limit.isPaused);
+
+	// Pause immediately
+	limit.pause();
+	t.true(limit.isPaused);
+
+	// Wait for the active count to be processed.
+	// Since concurrency is 1, only the first promise (which was already run) will finish.
+	await delay(120);
+
+	t.deepEqual(results, [1]);
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 2);
+
+	// Resume the execution
+	limit.resume();
+	t.false(limit.isPaused);
+
+	await Promise.all([promise1, promise2, promise3]);
+	t.deepEqual(results, [1, 2, 3]);
+});
+
+test('changing concurrency while paused does not execute queued tasks', async t => {
+	const limit = pLimit(1);
+	const results = [];
+
+	const promise1 = limit(async () => {
+		await delay(50);
+		results.push(1);
+	});
+
+	const promise2 = limit(async () => {
+		await delay(50);
+		results.push(2);
+	});
+
+	limit.pause();
+
+	// Increase concurrency while paused
+	limit.concurrency = 3;
+
+	await delay(100);
+
+	// Only promise 1 should have finished because the queue was paused
+	t.deepEqual(results, [1]);
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 1);
+
+	// Resume queue
+	limit.resume();
+	await Promise.all([promise1, promise2]);
+	t.deepEqual(results, [1, 2]);
+});

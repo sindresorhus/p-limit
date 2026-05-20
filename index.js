@@ -15,8 +15,13 @@ export default function pLimit(concurrency) {
 
 	const queue = new Queue();
 	let activeCount = 0;
+	let isPaused = false;
 
 	const resumeNext = () => {
+		if (isPaused) {
+			return;
+		}
+
 		// Process the next queued function if we're under the concurrency limit
 		if (activeCount < concurrency && queue.size > 0) {
 			activeCount++;
@@ -74,6 +79,30 @@ export default function pLimit(concurrency) {
 		pendingCount: {
 			get: () => queue.size,
 		},
+		isPaused: {
+			get: () => isPaused,
+		},
+		pause: {
+			value() {
+				isPaused = true;
+			},
+		},
+		resume: {
+			value() {
+				if (!isPaused) {
+					return;
+				}
+
+				isPaused = false;
+
+				queueMicrotask(() => {
+					// eslint-disable-next-line no-unmodified-loop-condition
+					while (activeCount < concurrency && queue.size > 0) {
+						resumeNext();
+					}
+				});
+			},
+		},
 		clearQueue: {
 			value() {
 				if (!rejectOnClear) {
@@ -97,7 +126,7 @@ export default function pLimit(concurrency) {
 
 				queueMicrotask(() => {
 					// eslint-disable-next-line no-unmodified-loop-condition
-					while (activeCount < concurrency && queue.size > 0) {
+					while (!isPaused && activeCount < concurrency && queue.size > 0) {
 						resumeNext();
 					}
 				});

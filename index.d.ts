@@ -10,6 +10,21 @@ export type LimitFunction = {
 	readonly pendingCount: number;
 
 	/**
+	Whether the execution of new queued promises is currently paused.
+	*/
+	readonly isPaused: boolean;
+
+	/**
+	Pause the execution of any queued promises. Already running promises will continue to completion.
+	*/
+	pause: () => void;
+
+	/**
+	Resume the execution of queued promises.
+	*/
+	resume: () => void;
+
+	/**
 	Get or set the concurrency limit.
 	*/
 	concurrency: number;
