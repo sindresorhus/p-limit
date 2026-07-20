@@ -221,6 +221,26 @@ test('map', async t => {
 	t.deepEqual(results, [2, 3, 4, 5, 6, 7, 8]);
 });
 
+test('map works when detached from the limit', async t => {
+	const limit = pLimit(1);
+	const {map} = limit;
+	let running = 0;
+	let maxRunning = 0;
+	const mapper = async input => {
+		running++;
+		maxRunning = Math.max(maxRunning, running);
+		await delay(10);
+		running--;
+		return input * 2;
+	};
+
+	const directResult = limit(mapper, 1);
+	const mapResult = map([2, 3], mapper);
+
+	t.deepEqual(await Promise.all([directResult, mapResult]), [2, [4, 6]]);
+	t.is(maxRunning, 1);
+});
+
 test('map passes index and preserves order with concurrency', async t => {
 	const limit = pLimit(3);
 	const inputs = [10, 10, 10, 10, 10];
