@@ -117,7 +117,12 @@ export default function pLimit(concurrency) {
 export function limitFunction(function_, options) {
 	const limit = pLimit(options);
 
-	return (...arguments_) => limit(() => function_(...arguments_));
+	const limitedFunction = (...arguments_) => limit(() => function_(...arguments_));
+	Object.defineProperty(limitedFunction, 'clearQueue', {
+		value: limit.clearQueue,
+	});
+
+	return limitedFunction;
 }
 
 function validateConcurrency(concurrency) {
