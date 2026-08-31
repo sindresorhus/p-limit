@@ -133,4 +133,4 @@ await Promise.all(input);
 export function limitFunction<Arguments extends unknown[], ReturnType>(
 	function_: (...arguments_: Arguments) => PromiseLike<ReturnType>,
 	options: Options
-): (...arguments_: Arguments) => Promise<ReturnType>;
+): ((...arguments_: Arguments) => Promise<ReturnType>) & Pick<LimitFunction, 'clearQueue'>;

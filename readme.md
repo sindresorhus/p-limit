@@ -154,6 +154,14 @@ Default: `false`
 Reject pending promises with an `AbortError` when `clearQueue()` is called.
 This is recommended if you await the returned promises, for example with `Promise.all`, so pending tasks do not remain unresolved after `clearQueue()`.
 
+### limitedFunction.clearQueue()
+
+Discard pending calls that have not started yet.
+
+When `rejectOnClear` is enabled, pending promises are rejected with an `AbortError`. Otherwise, their promises remain unresolved.
+
+This does not cancel calls that are already running.
+
 ## Recipes
 
 See [recipes.md](recipes.md) for common use cases and patterns.
