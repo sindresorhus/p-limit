@@ -31,6 +31,8 @@ export type LimitFunction = {
 
 	The mapper function receives the item value and its index.
 
+	If the iterable throws during iteration, the returned promise rejects with that error. Mapper functions that were already scheduled still run, and their results are discarded.
+
 	This is a convenience function for processing inputs that arrive in batches. For more complex use cases, see [p-map](https://github.com/sindresorhus/p-map).
 
 	@param iterable - An iterable containing an argument for the given function.

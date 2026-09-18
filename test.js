@@ -286,6 +286,112 @@ test('map accepts an iterable (array iterator)', async t => {
 	t.deepEqual(results, [2, 4, 6, 8]);
 });
 
+test('map accepts array-like inputs', async t => {
+	const limit = pLimit(1);
+	const inputs = {0: 'a', 1: 'b', length: 2};
+
+	const results = await limit.map(inputs, (value, index) => `${index}:${value}`); // eslint-disable-line unicorn/no-array-method-this-argument
+
+	t.deepEqual(results, ['0:a', '1:b']);
+});
+
+test('map does not leave unhandled rejections when the iterable throws', async t => {
+	const limit = pLimit(1);
+	const error = new Error('Iterator failed');
+
+	function * inputs() {
+		yield 1;
+		yield 2;
+		yield 3;
+		throw error;
+	}
+
+	await t.throwsAsync(limit.map(inputs(), async value => {
+		await delay(10);
+		throw new Error(`Mapper ${value} failed`);
+	}), {is: error});
+
+	// Wait for the active and queued mappers to reject. AVA fails the run if any rejection is unhandled.
+	await limit(() => {});
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 0);
+});
+
+test('map rejects with the mapper error', async t => {
+	const limit = pLimit(2);
+	const error = new Error('🦄');
+
+	await t.throwsAsync(limit.map([1, 2, 3], async value => {
+		if (value === 2) {
+			throw error;
+		}
+
+		return value;
+	}), {is: error});
+});
+
+test('map resolves to an empty array for an empty iterable', async t => {
+	const limit = pLimit(1);
+
+	t.deepEqual(await limit.map([], () => t.fail('mapper should not be called')), []);
+	t.deepEqual(await limit.map(new Set(), () => t.fail('mapper should not be called')), []);
+});
+
+test('map rejects with the iterable error when it throws before the first item', async t => {
+	const limit = pLimit(1);
+	const error = new Error('Iterator failed');
+
+	const inputs = {
+		* [Symbol.iterator]() { // eslint-disable-line require-yield
+			throw error;
+		},
+	};
+
+	await t.throwsAsync(limit.map(inputs, () => t.fail('mapper should not be called')), {is: error}); // eslint-disable-line unicorn/no-array-callback-reference, unicorn/no-array-method-this-argument
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 0);
+});
+
+test('map rejects immediately with the iterable error and still runs already scheduled tasks', async t => {
+	const limit = pLimit(1);
+	const error = new Error('Iterator failed');
+	const completed = [];
+
+	function * inputs() {
+		yield 1;
+		yield 2;
+		throw error;
+	}
+
+	await t.throwsAsync(limit.map(inputs(), async value => {
+		await delay(50);
+		completed.push(value);
+	}), {is: error});
+
+	// The rejection should not wait for the scheduled tasks to finish
+	t.deepEqual(completed, []);
+
+	// With concurrency 1, this only runs after the already scheduled tasks
+	await limit(() => {});
+	t.deepEqual(completed, [1, 2]);
+	t.is(limit.activeCount, 0);
+	t.is(limit.pendingCount, 0);
+});
+
+test('map passes sequential indexes for a generator', async t => {
+	const limit = pLimit(2);
+
+	function * inputs() {
+		yield 'a';
+		yield 'b';
+		yield 'c';
+	}
+
+	const results = await limit.map(inputs(), (value, index) => `${index}:${value}`);
+
+	t.deepEqual(results, ['0:a', '1:b', '2:c']);
+});
+
 test('accepts options object', async t => {
 	const limit = pLimit({concurrency: 1});
 
